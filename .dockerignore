@@ -1,0 +1,25 @@
+# Archivos de entorno y credenciales (se configuran en variables de Cloud Run)
+.env
+.env.local
+*.env
+
+# Control de versiones
+.git
+.gitignore
+
+# Artefactos de compilación
+target/
+backend/target/
+*.jar
+*.class
+
+# Node / dependencias locales
+node_modules/
+npm-debug.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
