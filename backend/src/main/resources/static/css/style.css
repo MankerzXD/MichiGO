@@ -194,20 +194,15 @@ body {
   background: var(--bg-base);
 }
 
-/* Temas del Mapa */
-.map-theme-adventure .leaflet-tile {
-  filter: contrast(1.05) saturate(1.35) brightness(1.02);
-  transition: filter 0.3s ease;
+/* Temas del Mapa: Modo Claro (Día) y Modo Oscuro (Noche) */
+.map-theme-day .leaflet-tile {
+  filter: contrast(1.06) saturate(1.35) brightness(1.02);
+  transition: filter 0.5s ease-in-out;
 }
 
-.map-theme-cyber .leaflet-tile {
-  filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(1.2) saturate(1.4);
-  transition: filter 0.3s ease;
-}
-
-.map-theme-satellite .leaflet-tile {
-  filter: contrast(1.08) saturate(1.2);
-  transition: filter 0.3s ease;
+.map-theme-night .leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) brightness(0.82) contrast(1.22) saturate(1.3);
+  transition: filter 0.5s ease-in-out;
 }
 
 .leaflet-control-attribution {
@@ -247,55 +242,6 @@ body {
   transform: scale(0.92);
   border-color: var(--border-active);
 }
-
-/* Menú de Temas de Mapa */
-.theme-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  width: 150px;
-  border-radius: 14px;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  z-index: 1000;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.theme-dropdown.hidden {
-  display: none !important;
-}
-
-.theme-option {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-family);
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 8px 10px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.theme-option.active, .theme-option:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.dot-adventure { background: #10B981; }
-.dot-cyber { background: #8B5CF6; }
-.dot-satellite { background: #F59E0B; }
 
 /* ==========================================================
    Botón Shutter Minimalista: Cámara con Orejitas

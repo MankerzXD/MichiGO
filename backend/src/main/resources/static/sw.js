@@ -1,5 +1,5 @@
 // MichiGO Service Worker - PWA Offline & Cache Manager
-const CACHE_NAME = 'michigo-pwa-v4.0';
+const CACHE_NAME = 'michigo-pwa-v5.0';
 
 const ASSETS_TO_CACHE = [
   './',

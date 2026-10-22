@@ -28,7 +28,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <!-- Estilos Minimalistas de MichiGO -->
-  <link rel="stylesheet" href="./css/style.css?v=4">
+  <link rel="stylesheet" href="./css/style.css?v=5">
 </head>
 <body>
   <div id="app-container">
@@ -62,26 +62,9 @@
           </svg>
         </button>
 
-        <button id="btn-map-theme" class="control-btn" title="Estilo de Mapa" aria-label="Cambiar estilo de mapa">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-            <line x1="8" y1="2" x2="8" y2="18"></line>
-            <line x1="16" y1="6" x2="16" y2="22"></line>
-          </svg>
+        <button id="btn-theme-toggle" class="control-btn" title="Modo Día / Noche (Automático según horario)" aria-label="Cambiar modo día o noche">
+          <span id="theme-icon" style="font-size: 18px;">☀️</span>
         </button>
-
-        <!-- Menú desplegable minimalista -->
-        <div id="map-theme-menu" class="theme-dropdown glass-card hidden">
-          <button class="theme-option active" data-theme="adventure">
-            <span class="dot dot-adventure"></span> Aventura
-          </button>
-          <button class="theme-option" data-theme="cyber">
-            <span class="dot dot-cyber"></span> Neón
-          </button>
-          <button class="theme-option" data-theme="satellite">
-            <span class="dot dot-satellite"></span> Satélite
-          </button>
-        </div>
       </div>
 
       <!-- Botón Shutter Minimalista: Cámara con Orejitas de Gato -->
@@ -270,9 +253,9 @@
   </div>
 
   <!-- Scripts -->
-  <script src="./js/api.js?v=4"></script>
-  <script src="./js/camera.js?v=4"></script>
-  <script src="./js/michidex.js?v=4"></script>
-  <script src="./js/app.js?v=4"></script>
+  <script src="./js/api.js?v=5"></script>
+  <script src="./js/camera.js?v=5"></script>
+  <script src="./js/michidex.js?v=5"></script>
+  <script src="./js/app.js?v=5"></script>
 </body>
 </html>

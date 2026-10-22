@@ -95,26 +95,14 @@ const MichiApp = (() => {
     }
   }
 
-  let currentTileLayer = null;
-  let activeTheme = 'adventure';
+  let currentTheme = getThemeByTime();
+  let manualThemeOverride = false;
 
-  const TILE_PROVIDERS = {
-    adventure: {
-      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      options: { maxZoom: 19, subdomains: 'abc', attribution: '&copy; OpenStreetMap contributors' },
-      themeClass: 'map-theme-adventure'
-    },
-    cyber: {
-      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      options: { maxZoom: 19, subdomains: 'abc', attribution: '&copy; OpenStreetMap contributors' },
-      themeClass: 'map-theme-cyber'
-    },
-    satellite: {
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      options: { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar' },
-      themeClass: 'map-theme-satellite'
-    }
-  };
+  function getThemeByTime() {
+    const hour = new Date().getHours();
+    // Día: 07:00 a 18:59 | Noche: 19:00 a 06:59
+    return (hour >= 19 || hour < 7) ? 'night' : 'day';
+  }
 
   // Inicialización del Mapa Leaflet
   function initLeafletMap() {
@@ -127,12 +115,19 @@ const MichiApp = (() => {
       attributionControl: false
     }).setView([currentCoordinates.latitude, currentCoordinates.longitude], 16);
 
-    // Aplicar tema inicial (Aventura estilo videojuego)
-    setMapTheme('adventure');
+    // Capa base limpia y viva (OpenStreetMap Humanitarian)
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      subdomains: 'abc',
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Aplicar tema según la hora actual
+    applyTheme(currentTheme);
 
     catMarkersLayer = L.layerGroup().addTo(map);
 
-    // Marcador del Entrenador (usuario) con pulso radar de doble anillo
+    // Marcador del Entrenador con pulso radar
     const userIcon = L.divIcon({
       className: 'user-gps-container',
       html: `
@@ -150,56 +145,49 @@ const MichiApp = (() => {
       zIndexOffset: 1000
     }).addTo(map);
 
-    setupMapThemeSwitcher();
+    setupDayNightToggle();
+
+    // Verificación automática periódica de horario cada minuto
+    setInterval(() => {
+      if (!manualThemeOverride) {
+        const timeTheme = getThemeByTime();
+        if (timeTheme !== currentTheme) {
+          applyTheme(timeTheme);
+        }
+      }
+    }, 60000);
   }
 
-  // Cambio dinámico de estilo visual de mapa
-  function setMapTheme(themeName) {
-    if (!TILE_PROVIDERS[themeName]) return;
-    activeTheme = themeName;
-    const provider = TILE_PROVIDERS[themeName];
-
-    if (currentTileLayer && map) {
-      map.removeLayer(currentTileLayer);
-    }
-
-    currentTileLayer = L.tileLayer(provider.url, provider.options).addTo(map);
-
-    // Aplicar clase CSS temática al contenedor del mapa
+  // Aplica el tema Claro (Día) u Oscuro (Noche)
+  function applyTheme(theme) {
+    currentTheme = theme;
     const mapElement = document.getElementById('map');
+    const themeIcon = document.getElementById('theme-icon');
+    const btnToggle = document.getElementById('btn-theme-toggle');
+
     if (mapElement) {
-      mapElement.className = provider.themeClass;
+      mapElement.className = theme === 'night' ? 'map-theme-night' : 'map-theme-day';
     }
 
-    // Actualizar botones del menú de temas
-    document.querySelectorAll('.theme-option').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.theme === themeName);
-    });
+    if (themeIcon) {
+      themeIcon.textContent = theme === 'night' ? '🌙' : '☀️';
+    }
+
+    if (btnToggle) {
+      btnToggle.title = theme === 'night' 
+        ? 'Modo Noche (Activo por horario o manual). Toca para modo Día.' 
+        : 'Modo Día (Activo por horario o manual). Toca para modo Noche.';
+    }
   }
 
-  // Controlador del menú flotante de temas de mapa
-  function setupMapThemeSwitcher() {
-    const btnMapTheme = document.getElementById('btn-map-theme');
-    const themeMenu = document.getElementById('map-theme-menu');
-
-    if (btnMapTheme && themeMenu) {
-      btnMapTheme.addEventListener('click', (e) => {
-        e.stopPropagation();
-        themeMenu.classList.toggle('hidden');
-      });
-
-      document.querySelectorAll('.theme-option').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const theme = btn.dataset.theme;
-          setMapTheme(theme);
-          themeMenu.classList.add('hidden');
-        });
-      });
-
-      // Cerrar menú al tocar cualquier otra parte del mapa
-      document.addEventListener('click', () => {
-        themeMenu.classList.add('hidden');
+  // Botón para alternar manualmente entre Día y Noche
+  function setupDayNightToggle() {
+    const btnToggle = document.getElementById('btn-theme-toggle');
+    if (btnToggle) {
+      btnToggle.addEventListener('click', () => {
+        manualThemeOverride = true;
+        const newTheme = currentTheme === 'night' ? 'day' : 'night';
+        applyTheme(newTheme);
       });
     }
   }
