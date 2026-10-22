@@ -1,0 +1,1184 @@
+/* ==========================================================
+   MichiGO Design System - Pokémon GO Style PWA
+   ========================================================== */
+
+:root {
+  --bg-dark: #0B0F19;
+  --bg-card: rgba(18, 24, 38, 0.85);
+  --bg-glass: rgba(25, 33, 50, 0.65);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-glow: rgba(99, 102, 241, 0.4);
+
+  --color-primary: #EC4899;
+  --color-secondary: #8B5CF6;
+  --color-accent: #3B82F6;
+  
+  --rarity-common: #10B981;
+  --rarity-rare: #6366F1;
+  --rarity-legendary: #F59E0B;
+
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --nav-height: 72px;
+  --hud-height: 64px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow: hidden;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  height: -webkit-fill-available;
+  user-select: none;
+}
+
+#app-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glassmorphism Generic Utility */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================
+   HUD Superior
+   ========================================================== */
+.app-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--hud-height) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 8px) 16px 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(11, 15, 25, 0.82);
+  backdrop-filter: blur(12px);
+  padding: 6px 14px 6px 8px;
+  border-radius: 30px;
+  border: 1px solid var(--border-glass);
+  pointer-events: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.brand-logo-ring {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.radar-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.hud-trainer-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(11, 15, 25, 0.82);
+  backdrop-filter: blur(12px);
+  padding: 4px 6px 4px 12px;
+  border-radius: 30px;
+  border: 1px solid var(--border-glass);
+  pointer-events: auto;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.trainer-lvl-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #F59E0B;
+}
+
+.hud-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #F59E0B;
+}
+
+/* ==========================================================
+   Vistas de Pantalla
+   ========================================================== */
+.view-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  overflow: hidden;
+}
+
+.view-screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================
+   Vista 1: Mapa Leaflet
+   ========================================================== */
+#map {
+  width: 100%;
+  height: 100%;
+  background: #0f172a;
+}
+
+/* Estilo oscuro para Leaflet */
+.leaflet-tile {
+  filter: brightness(0.75) contrast(1.15) saturate(0.85);
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.map-overlay-top {
+  position: absolute;
+  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 8px);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 900;
+  pointer-events: none;
+}
+
+.radar-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.pulse-ring {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+}
+
+.map-controls {
+  position: absolute;
+  right: 16px;
+  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 60px);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.glass-btn {
+  background: rgba(18, 24, 38, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.glass-btn:active {
+  transform: scale(0.92);
+  background: rgba(99, 102, 241, 0.3);
+}
+
+.btn-round {
+  width: 46px;
+  height: 46px;
+}
+
+/* ==========================================================
+   Botón de Captura Central: Cámara con Orejitas de Gato
+   ========================================================== */
+.catch-action-container {
+  position: absolute;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 950;
+}
+
+.hidden-input {
+  display: none !important;
+}
+
+.cat-camera-btn {
+  width: 90px;
+  height: 82px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: float-camera 3s infinite ease-in-out;
+  filter: drop-shadow(0 8px 24px rgba(236, 72, 153, 0.55));
+}
+
+@keyframes float-camera {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.03); }
+}
+
+.cat-camera-btn:active {
+  transform: scale(0.92);
+}
+
+/* Orejitas de Gato */
+.cat-ears-wrap {
+  width: 82px;
+  height: 22px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+  z-index: 1;
+}
+
+.cat-ear {
+  width: 24px;
+  height: 22px;
+  background: linear-gradient(135deg, #FF6B8B 0%, #EC4899 100%);
+  border: 2.5px solid #FFFFFF;
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.ear-left {
+  border-top-left-radius: 18px 22px;
+  border-top-right-radius: 6px 14px;
+  transform: rotate(-10deg);
+}
+
+.ear-right {
+  border-top-right-radius: 18px 22px;
+  border-top-left-radius: 6px 14px;
+  transform: rotate(10deg);
+}
+
+.ear-inner {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 14px;
+  background: #FFD1DC;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Chasis de la Cámara */
+.camera-chassis {
+  width: 86px;
+  height: 60px;
+  background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
+  border: 2.5px solid #FFFFFF;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.25), 0 4px 15px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  margin-top: -3px;
+}
+
+/* Botón disparador */
+.camera-shutter {
+  position: absolute;
+  top: -6px;
+  left: 14px;
+  width: 14px;
+  height: 6px;
+  background: #F43F5E;
+  border: 1.5px solid #FFFFFF;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Flash de la cámara */
+.camera-flash-light {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  width: 11px;
+  height: 11px;
+  background: #FDE047;
+  border: 1.5px solid #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #FDE047;
+  animation: flash-pulse 2s infinite ease-in-out;
+}
+
+@keyframes flash-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 14px #FDE047; }
+}
+
+/* Lente Central */
+.camera-lens-housing {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
+  border: 2px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+}
+
+.camera-lens-glass {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #1E293B 20%, #060913 90%);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lens-reflection {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  width: 9px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+.lens-aperture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lens-paw {
+  font-size: 14px;
+  filter: drop-shadow(0 0 4px #EC4899);
+}
+
+/* Bigotes decorativos en la cámara */
+.camera-whiskers {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.camera-whiskers span {
+  width: 10px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 1px;
+}
+
+.whiskers-left {
+  left: 5px;
+}
+.whiskers-left span:first-child { transform: rotate(8deg); }
+.whiskers-left span:last-child { transform: rotate(-8deg); }
+
+.whiskers-right {
+  right: 5px;
+}
+.whiskers-right span:first-child { transform: rotate(-8deg); }
+.whiskers-right span:last-child { transform: rotate(8deg); }
+
+.catch-label {
+  margin-top: 6px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 3px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================
+   Vista 2: Perfil y Michidex
+   ========================================================== */
+.profile-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 12px) 16px calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 30px) 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.trainer-card {
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.trainer-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.trainer-avatar-wrapper {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.4);
+}
+
+.trainer-level-tag {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #F59E0B;
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 2px solid var(--bg-dark);
+}
+
+.trainer-info h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.trainer-handle {
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+  display: block;
+}
+
+.trainer-bio {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+.xp-bar-container {
+  margin-top: 18px;
+}
+
+.xp-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.xp-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.xp-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #EC4899, #8B5CF6);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.michidex-counters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.counter-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  padding: 10px 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.counter-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.counter-lbl {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.rarity-common .counter-val { color: var(--rarity-common); }
+.rarity-rare .counter-val { color: var(--rarity-rare); }
+.rarity-legendary .counter-val { color: var(--rarity-legendary); }
+
+/* ==========================================================
+   Secciones e Insignias
+   ========================================================== */
+.section-container {
+  margin-bottom: 24px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.badge-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.badge-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  transition: transform 0.2s;
+}
+
+.badge-item.locked {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+.badge-icon-box {
+  font-size: 1.8rem;
+}
+
+.badge-name {
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ==========================================================
+   Michidex Cat Grid
+   ========================================================== */
+.filter-pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.filter-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-pill.active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+}
+
+.michidex-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.michi-dex-card {
+  background: rgba(25, 33, 50, 0.75);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.michi-dex-card:active {
+  transform: scale(0.97);
+}
+
+.michi-card-img-wrap {
+  width: 100%;
+  height: 120px;
+  position: relative;
+}
+
+.michi-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.michi-card-rarity {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 10px;
+  color: #FFFFFF;
+}
+
+.michi-card-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.michi-card-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.michi-card-pattern {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================
+   Barra de Navegación Inferior (TabBar)
+   ========================================================== */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  border-top: 1px solid var(--border-glass);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 24px 24px 0 0;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 18px;
+  transition: color 0.2s;
+}
+
+.nav-btn.active {
+  color: var(--color-primary);
+}
+
+.nav-btn-camera-trigger {
+  background: none;
+  border: none;
+  position: relative;
+  top: -14px;
+  cursor: pointer;
+}
+
+.nav-camera-glow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(236, 72, 153, 0.6);
+  border: 3px solid var(--bg-dark);
+}
+
+/* ==========================================================
+   Modales & Overlays
+   ========================================================== */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 15, 25, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.hidden {
+  display: none !important;
+}
+
+/* Escaneo Gemini */
+.scan-card {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 28px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scan-image-preview-wrapper {
+  width: 220px;
+  height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.scan-image-preview-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #06B6D4, #EC4899, transparent);
+  box-shadow: 0 0 15px #06B6D4;
+  animation: scan-move 2s infinite ease-in-out;
+}
+
+@keyframes scan-move {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.gemini-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.scan-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.scan-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.loading-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #EC4899, #38BDF8);
+  border-radius: 4px;
+  animation: progress-indet 1.8s infinite ease-in-out;
+}
+
+@keyframes progress-indet {
+  0% { width: 0%; transform: translateX(-100%); }
+  50% { width: 70%; transform: translateX(20%); }
+  100% { width: 100%; transform: translateX(100%); }
+}
+
+/* Modal de Celebración */
+.celebration-card {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 28px;
+  padding: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.animate-pop {
+  animation: pop-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-main);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.celebration-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rarity-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: #000;
+  background: #F59E0B;
+}
+
+.xp-gained-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.celebration-img-wrapper {
+  width: 180px;
+  height: 180px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 3px solid var(--border-glass);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  margin-bottom: 16px;
+}
+
+.celebration-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.michi-modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.michi-pattern-pill {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.michi-personality-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #E2E8F0;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.michi-power-box {
+  font-size: 0.78rem;
+  margin-bottom: 20px;
+}
+
+.power-label {
+  color: #F59E0B;
+  font-weight: 700;
+}
+
+.power-value {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #EC4899, #8B5CF6);
+  border: none;
+  color: #FFFFFF;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* Banner de Instalación */
+.install-banner {
+  position: absolute;
+  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 8px);
+  left: 16px;
+  right: 16px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1500;
+}
+
+.install-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.78rem;
+}
+
+.btn-dismiss {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #FFF;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================
+   Leaflet Custom Markers
+   ========================================================== */
+.custom-cat-pin {
+  background: none;
+  border: none;
+}
+
+.pin-container {
+  position: relative;
+  width: 44px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-img {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+  animation: bounce-pin 2.5s infinite ease-in-out;
+}
+
+@keyframes bounce-pin {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.user-gps-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #3B82F6;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 16px #3B82F6;
+  position: relative;
+}
+
+.user-gps-radar-wave {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid rgba(59, 130, 246, 0.6);
+  animation: user-wave 2s infinite ease-out;
+}
+
+@keyframes user-wave {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}

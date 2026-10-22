@@ -1,0 +1,27 @@
+{
+  "name": "MichiGO - Captura Michis con IA",
+  "short_name": "MichiGO",
+  "description": "Descubre, fotografía y cataloga gatos callejeros usando Inteligencia Artificial Gemini.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0F19",
+  "theme_color": "#0B0F19",
+  "lang": "es",
+  "categories": ["entertainment", "games", "lifestyle"],
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

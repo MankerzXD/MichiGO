@@ -1,0 +1,22 @@
+# Variables de entorno y secretos
+.env
+.env.local
+*.env
+
+# Maven y compilación de Java
+target/
+*.class
+*.jar
+*.war
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db

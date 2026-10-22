@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>MichiGO - Descubre & Captura Michis con IA</title>
+  
+  <!-- Optimización Móvil y Safari iOS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MichiGO">
+  <meta name="theme-color" content="#0B0F19">
+  <meta name="description" content="PWA inspirada en Pokémon GO para descubrir, fotografiar y catalogar gatos callejeros con Google Gemini AI.">
+
+  <!-- Favicon e Iconos PWA -->
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Fuentes y Librerías Externas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet.js para el Mapa Interactivo -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Canvas Confetti para efectos de captura -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Estilos Personalizados de MichiGO -->
+  <link rel="stylesheet" href="./css/style.css?v=2">
+</head>
+<body>
+  <div id="app-container">
+    
+    <!-- HUD Superior -->
+    <header class="app-hud">
+      <div class="hud-brand">
+        <div class="brand-logo-ring">
+          <img src="./assets/icons/favicon.svg" alt="MichiGO Logo" class="brand-icon">
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Michi<span class="gradient-text">GO</span></span>
+          <span class="brand-subtitle"><span class="radar-dot"></span> Radar Activo</span>
+        </div>
+      </div>
+
+      <div class="hud-trainer-badge" id="hud-trainer-badge">
+        <div class="trainer-lvl-pill">Lv. <span id="hud-trainer-level">1</span></div>
+        <img id="hud-trainer-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar Entrenador" class="hud-avatar">
+      </div>
+    </header>
+
+    <!-- Vista 1: Mapa Interactivo estilo Pokémon GO -->
+    <main id="view-map" class="view-screen active">
+      <!-- Contenedor del Mapa Leaflet -->
+      <div id="map"></div>
+
+      <!-- Overlays y Controles del Mapa -->
+      <div class="map-overlay-top">
+        <div class="radar-chip glass-panel">
+          <span class="pulse-ring"></span>
+          <span id="nearby-cats-count">Buscando michis en tu zona...</span>
+        </div>
+      </div>
+
+      <div class="map-controls">
+        <button id="btn-recenter" class="glass-btn btn-round" title="Centrar mi ubicación" aria-label="Centrar en mi posición GPS">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Botón de Captura Central: Cámara con Orejitas de Gato -->
+      <div class="catch-action-container">
+        <!-- Input nativo de cámara trasera de celular -->
+        <input type="file" id="cat-camera-input" accept="image/*" capture="environment" class="hidden-input">
+        
+        <label for="cat-camera-input" class="cat-camera-btn" id="btn-open-camera" aria-label="Fotografiar y capturar Michi" title="Abrir Cámara Michi">
+          <!-- Orejitas de gato superiores -->
+          <div class="cat-ears-wrap">
+            <div class="cat-ear ear-left">
+              <div class="ear-inner"></div>
+            </div>
+            <div class="cat-ear ear-right">
+              <div class="ear-inner"></div>
+            </div>
+          </div>
+
+          <!-- Cuerpo de la cámara -->
+          <div class="camera-chassis">
+            <div class="camera-shutter"></div>
+            <div class="camera-flash-light"></div>
+            
+            <!-- Gran Lente Central con reflejo -->
+            <div class="camera-lens-housing">
+              <div class="camera-lens-glass">
+                <div class="lens-reflection"></div>
+                <div class="lens-aperture">
+                  <span class="lens-paw">🐾</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bigotes de adorno en la cámara -->
+            <div class="camera-whiskers whiskers-left">
+              <span></span><span></span>
+            </div>
+            <div class="camera-whiskers whiskers-right">
+              <span></span><span></span>
+            </div>
+          </div>
+        </label>
+        <span class="catch-label">¡Fotografiar Michi!</span>
+      </div>
+    </main>
+
+    <!-- Vista 2: Perfil del Entrenador & Michidex -->
+    <section id="view-profile" class="view-screen">
+      <div class="profile-scroll-area">
+        
+        <!-- Tarjeta de Entrenador -->
+        <div class="trainer-card glass-panel">
+          <div class="trainer-header">
+            <div class="trainer-avatar-wrapper">
+              <img id="profile-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="Avatar" class="profile-avatar-img">
+              <span class="trainer-level-tag" id="profile-level-tag">Nvl 1</span>
+            </div>
+            <div class="trainer-info">
+              <h2 id="profile-name">Entrenador Michi</h2>
+              <span class="trainer-handle" id="profile-username">@michimaster</span>
+              <p class="trainer-bio" id="profile-bio">Explorador de callejones en busca de felinos legendarios.</p>
+            </div>
+          </div>
+
+          <!-- Barra de Experiencia -->
+          <div class="xp-bar-container">
+            <div class="xp-labels">
+              <span>Experiencia</span>
+              <span id="xp-text">0 / 500 XP</span>
+            </div>
+            <div class="xp-track">
+              <div id="xp-fill" class="xp-progress" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <!-- Estadísticas Rápidas de la Michidex -->
+          <div class="michidex-counters-grid">
+            <div class="counter-box">
+              <span class="counter-val" id="stat-total">0</span>
+              <span class="counter-lbl">Total Michis</span>
+            </div>
+            <div class="counter-box rarity-common">
+              <span class="counter-val" id="stat-common">0</span>
+              <span class="counter-lbl">🟢 Común</span>
+            </div>
+            <div class="counter-box rarity-rare">
+              <span class="counter-val" id="stat-rare">0</span>
+              <span class="counter-lbl">🟣 Raro</span>
+            </div>
+            <div class="counter-box rarity-legendary">
+              <span class="counter-val" id="stat-legendary">0</span>
+              <span class="counter-lbl">🟡 Legendario</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de Insignias / Logros -->
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3 class="section-title">Insignias de Entrenador</h3>
+            <span class="badge-count" id="badges-unlocked-count">0/4</span>
+          </div>
+          <div class="badges-grid" id="badges-container">
+            <!-- Insignias renderizadas dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Sección de la Michidex (Colección de Gatos Capturados) -->
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3 class="section-title">Michidex Oficial</h3>
+            <!-- Filtro de Rarezas -->
+            <div class="filter-pills" id="michidex-filters">
+              <button class="filter-pill active" data-filter="ALL">Todos</button>
+              <button class="filter-pill" data-filter="COMUN">Común</button>
+              <button class="filter-pill" data-filter="RARO">Raro</button>
+              <button class="filter-pill" data-filter="LEGENDARIO">Legendario</button>
+            </div>
+          </div>
+
+          <div class="michidex-grid" id="michidex-container">
+            <!-- Miniaturas de gatos renderizadas dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Barra de Navegación Inferior (PWA TabBar) -->
+    <nav class="bottom-nav glass-panel">
+      <button class="nav-btn active" id="tab-map" data-target="view-map">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+          <line x1="8" y1="2" x2="8" y2="18"></line>
+          <line x1="16" y1="6" x2="16" y2="22"></line>
+        </svg>
+        <span>Explorar</span>
+      </button>
+
+      <button class="nav-btn-camera-trigger" id="tab-camera" title="Tomar Foto">
+        <div class="nav-camera-glow">
+          <span>📸</span>
+        </div>
+      </button>
+
+      <button class="nav-btn" id="tab-profile" data-target="view-profile">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Michidex</span>
+      </button>
+    </nav>
+
+    <!-- Overlay de Escaneo y Análisis con Gemini IA -->
+    <div id="ai-scan-modal" class="modal-overlay hidden">
+      <div class="scan-card glass-panel">
+        <div class="scan-image-preview-wrapper">
+          <img id="scan-preview-img" src="" alt="Foto Michi">
+          <div class="scanner-laser"></div>
+        </div>
+        <div class="scan-status-box">
+          <div class="gemini-badge">
+            <span class="sparkle">✨</span> Google Gemini Vision AI
+          </div>
+          <h4 class="scan-title">Identificando Michi...</h4>
+          <p class="scan-desc" id="scan-status-text">Analizando pelaje, mirada y nivel de ternura...</p>
+          <div class="loading-bar">
+            <div class="loading-progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Captura Exitosa (Celebración & Pokédex Card) -->
+    <div id="catch-celebration-modal" class="modal-overlay hidden">
+      <div class="celebration-card glass-panel animate-pop">
+        <button class="modal-close-btn" id="btn-close-celebration">×</button>
+        
+        <div class="celebration-header">
+          <span class="rarity-badge" id="modal-rarity-badge">LEGENDARIO</span>
+          <span class="xp-gained-pill" id="modal-xp-gained">+300 XP</span>
+        </div>
+
+        <div class="celebration-img-wrapper">
+          <img id="modal-cat-img" src="" alt="Michi Capturado">
+        </div>
+
+        <div class="celebration-body">
+          <h2 class="michi-modal-title" id="modal-michi-name">Don Bigotes de la Mancha</h2>
+          <div class="michi-pattern-pill" id="modal-coat-pattern">Tuxedo Elegante con Pajarita</div>
+          
+          <div class="michi-personality-box">
+            <span class="quote-icon">“</span>
+            <p id="modal-personality">Juzga en silencio tus decisiones de vida mientras exige su sobrecito gourmet.</p>
+          </div>
+
+          <div class="michi-power-box">
+            <span class="power-label">⚡ Habilidad Especial:</span>
+            <span class="power-value" id="modal-special-power">Mirada de Desdén Aristocrático</span>
+          </div>
+
+          <div class="celebration-actions">
+            <button class="btn-primary" id="btn-save-to-michidex">Registrar en Michidex</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner de Instalación PWA (iOS / Android) -->
+    <div id="pwa-install-banner" class="install-banner glass-panel hidden">
+      <div class="install-text">
+        <strong>📱 Instala MichiGO</strong>
+        <span>Pulsa Compartir y luego "Añadir a pantalla de inicio"</span>
+      </div>
+      <button id="btn-dismiss-install" class="btn-dismiss">Entendido</button>
+    </div>
+
+  </div>
+
+  <!-- Scripts de la Aplicación -->
+  <script src="./js/api.js?v=2"></script>
+  <script src="./js/camera.js?v=2"></script>
+  <script src="./js/michidex.js?v=2"></script>
+  <script src="./js/app.js?v=2"></script>
+</body>
+</html>
