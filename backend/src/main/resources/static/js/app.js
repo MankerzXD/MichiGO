@@ -95,6 +95,27 @@ const MichiApp = (() => {
     }
   }
 
+  let currentTileLayer = null;
+  let activeTheme = 'adventure';
+
+  const TILE_PROVIDERS = {
+    adventure: {
+      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      options: { maxZoom: 19, subdomains: 'abc', attribution: '&copy; OpenStreetMap contributors' },
+      themeClass: 'map-theme-adventure'
+    },
+    cyber: {
+      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      options: { maxZoom: 19, subdomains: 'abc', attribution: '&copy; OpenStreetMap contributors' },
+      themeClass: 'map-theme-cyber'
+    },
+    satellite: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      options: { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar' },
+      themeClass: 'map-theme-satellite'
+    }
+  };
+
   // Inicialización del Mapa Leaflet
   function initLeafletMap() {
     const mapElement = document.getElementById('map');
@@ -106,19 +127,17 @@ const MichiApp = (() => {
       attributionControl: false
     }).setView([currentCoordinates.latitude, currentCoordinates.longitude], 16);
 
-    // Capa de mapa real sin marcas de agua ni API keys requeridas (OpenStreetMap / Esri)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    // Aplicar tema inicial (Aventura estilo videojuego)
+    setMapTheme('adventure');
 
     catMarkersLayer = L.layerGroup().addTo(map);
 
-    // Crear marcador del Entrenador (usuario) con pulso radar
+    // Marcador del Entrenador (usuario) con pulso radar de doble anillo
     const userIcon = L.divIcon({
       className: 'user-gps-container',
       html: `
         <div class="user-gps-marker">
+          <div class="user-gps-radar-wave"></div>
           <div class="user-gps-radar-wave"></div>
         </div>
       `,
@@ -130,6 +149,59 @@ const MichiApp = (() => {
       icon: userIcon,
       zIndexOffset: 1000
     }).addTo(map);
+
+    setupMapThemeSwitcher();
+  }
+
+  // Cambio dinámico de estilo visual de mapa
+  function setMapTheme(themeName) {
+    if (!TILE_PROVIDERS[themeName]) return;
+    activeTheme = themeName;
+    const provider = TILE_PROVIDERS[themeName];
+
+    if (currentTileLayer && map) {
+      map.removeLayer(currentTileLayer);
+    }
+
+    currentTileLayer = L.tileLayer(provider.url, provider.options).addTo(map);
+
+    // Aplicar clase CSS temática al contenedor del mapa
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+      mapElement.className = provider.themeClass;
+    }
+
+    // Actualizar botones del menú de temas
+    document.querySelectorAll('.theme-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+
+  // Controlador del menú flotante de temas de mapa
+  function setupMapThemeSwitcher() {
+    const btnMapTheme = document.getElementById('btn-map-theme');
+    const themeMenu = document.getElementById('map-theme-menu');
+
+    if (btnMapTheme && themeMenu) {
+      btnMapTheme.addEventListener('click', (e) => {
+        e.stopPropagation();
+        themeMenu.classList.toggle('hidden');
+      });
+
+      document.querySelectorAll('.theme-option').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const theme = btn.dataset.theme;
+          setMapTheme(theme);
+          themeMenu.classList.add('hidden');
+        });
+      });
+
+      // Cerrar menú al tocar cualquier otra parte del mapa
+      document.addEventListener('click', () => {
+        themeMenu.classList.add('hidden');
+      });
+    }
   }
 
   // Geolocalización automática en tiempo real
@@ -148,7 +220,7 @@ const MichiApp = (() => {
         }
       },
       (error) => {
-        console.log("No se pudo obtener ubicación GPS precisa, usando punto de referencia urbano:", error.message);
+        console.log("Usando punto de referencia urbano:", error.message);
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
     );
@@ -173,7 +245,7 @@ const MichiApp = (() => {
     }
   }
 
-  // Renderizar pines de michis capturados en el mapa
+  // Renderizar pines estilo criatura interactiva en el mapa
   async function refreshCatMarkers() {
     if (!catMarkersLayer) return;
     catMarkersLayer.clearLayers();
@@ -185,16 +257,32 @@ const MichiApp = (() => {
       countBadge.textContent = `🐾 ${catches.length} michis registrados cerca`;
     }
 
-    const catPinIcon = L.icon({
-      iconUrl: './assets/icons/cat-pin.svg',
-      iconSize: [44, 54],
-      iconAnchor: [22, 54],
-      popupAnchor: [0, -50]
-    });
-
     catches.forEach(cat => {
       if (cat.latitude && cat.longitude) {
-        const marker = L.marker([cat.latitude, cat.longitude], { icon: catPinIcon });
+        const rarityKey = (cat.rarity || 'comun').toLowerCase();
+
+        // Pin personalizado con la foto real del michi, orejitas y aura resplandeciente
+        const creatureIcon = L.divIcon({
+          className: 'creature-marker-wrapper',
+          html: `
+            <div class="creature-pin">
+              <div class="creature-pin-ears">
+                <div class="creature-ear ear-l"></div>
+                <div class="creature-ear ear-r"></div>
+              </div>
+              <div class="creature-avatar-box rarity-aura-${rarityKey}">
+                <img src="${cat.imageUrl}" alt="${cat.michiName}" loading="lazy">
+              </div>
+              <div class="creature-pin-tail"></div>
+              <div class="creature-name-pill">${cat.michiName}</div>
+            </div>
+          `,
+          iconSize: [58, 68],
+          iconAnchor: [29, 64],
+          popupAnchor: [0, -60]
+        });
+
+        const marker = L.marker([cat.latitude, cat.longitude], { icon: creatureIcon });
         
         // Al tocar el pin en el mapa, abre directamente su tarjeta Pokédex
         marker.on('click', () => {

@@ -30,7 +30,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <!-- Estilos Personalizados de MichiGO -->
-  <link rel="stylesheet" href="./css/style.css?v=2">
+  <link rel="stylesheet" href="./css/style.css?v=3">
 </head>
 <body>
   <div id="app-container">
@@ -59,6 +59,8 @@
       <div id="map"></div>
 
       <!-- Overlays y Controles del Mapa -->
+      <div class="map-vignette-overlay"></div>
+
       <div class="map-overlay-top">
         <div class="radar-chip glass-panel">
           <span class="pulse-ring"></span>
@@ -73,6 +75,23 @@
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
           </svg>
         </button>
+
+        <button id="btn-map-theme" class="glass-btn btn-round" title="Cambiar aspecto del mapa" aria-label="Cambiar estilo de mapa">
+          <span style="font-size: 20px;">🗺️</span>
+        </button>
+
+        <!-- Menú flotante de temas de mapa -->
+        <div id="map-theme-menu" class="theme-dropdown glass-panel hidden">
+          <button class="theme-option active" data-theme="adventure">
+            <span class="theme-dot dot-adventure"></span> Aventura Pokémon
+          </button>
+          <button class="theme-option" data-theme="cyber">
+            <span class="theme-dot dot-cyber"></span> Cyber Neón
+          </button>
+          <button class="theme-option" data-theme="satellite">
+            <span class="theme-dot dot-satellite"></span> Satélite HD
+          </button>
+        </div>
       </div>
 
       <!-- Botón de Captura Central: Cámara con Orejitas de Gato -->
@@ -294,9 +313,9 @@
   </div>
 
   <!-- Scripts de la Aplicación -->
-  <script src="./js/api.js?v=2"></script>
-  <script src="./js/camera.js?v=2"></script>
-  <script src="./js/michidex.js?v=2"></script>
-  <script src="./js/app.js?v=2"></script>
+  <script src="./js/api.js?v=3"></script>
+  <script src="./js/camera.js?v=3"></script>
+  <script src="./js/michidex.js?v=3"></script>
+  <script src="./js/app.js?v=3"></script>
 </body>
 </html>
