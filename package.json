@@ -1,0 +1,13 @@
+{
+  "name": "michigo",
+  "version": "1.0.0",
+  "description": "MichiGO - PWA móvil para descubrir y registrar gatos callejeros con Google Gemini AI",
+  "scripts": {
+    "dev": "npx serve frontend",
+    "start": "npx serve frontend",
+    "backend": "cd backend && mvn spring-boot:run"
+  },
+  "keywords": ["michigo", "pwa", "gemini-ai", "leaflet", "cats"],
+  "author": "Manuel J. Sanchez",
+  "license": "MIT"
+}
