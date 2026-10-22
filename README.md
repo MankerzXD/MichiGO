@@ -116,8 +116,31 @@ npx serve frontend
 
 ---
 
-## 🏆 Sistema de Medallas / Insignias
-- 🐾 **Primer Ronroneo**: Fotografió a su primer michi callejero.
-- 💎 **Cazador Exclusivo**: Descubrió al menos un michi de rareza Rara.
-- 👑 **Bendición Mística**: Encontró un Michi Legendario en el mundo real.
-- ⭐ **Maestro Michi**: Registró 5 o más michis en su Michidex.
+---
+
+## ☁️ Despliegue en Google Cloud Run
+
+MichiGO incluye un [`Dockerfile`](file:///c:/Users/sanch/OneDrive/Documents/MichiGO/Dockerfile) multi-etapa optimizado que compila Spring Boot y empaqueta la PWA para producción.
+
+### Opción A: Despliegue directo con Google Cloud CLI (`gcloud`)
+Desde la raíz del proyecto, ejecuta:
+```bash
+# 1. Configurar tu proyecto de Google Cloud
+gcloud config set project TU_PROJECT_ID
+
+# 2. Desplegar directamente en Cloud Run
+gcloud run deploy michigo \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GEMINI_API_KEY="tu_clave_de_gemini_aqui"
+```
+
+### Opción B: Despliegue continuo desde GitHub
+1. Entra a la consola de [Google Cloud Run](https://console.cloud.google.com/run).
+2. Haz clic en **"Crear servicio"**.
+3. Selecciona **"Implementación continua desde un repositorio de Git"**.
+4. Conecta tu repositorio `MankerzXD/MichiGO` y rama `main`.
+5. En la sección **"Variables de entorno"**, agrega:
+   - `GEMINI_API_KEY`: Tu clave de Gemini.
+6. Haz clic en **"Crear"**. Cloud Run compilará el Dockerfile, generará una URL pública con **HTTPS automático**, y la PWA estará 100% lista para ser instalada en cualquier iPhone o Android en todo el mundo.
