@@ -1,30 +1,29 @@
 /* ==========================================================
-   MichiGO Design System - Pokémon GO Style PWA
+   MichiGO — Minimalist Luxury Design System
    ========================================================== */
 
 :root {
-  --bg-dark: #0B0F19;
-  --bg-card: rgba(18, 24, 38, 0.85);
-  --bg-glass: rgba(25, 33, 50, 0.65);
-  --border-glass: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(99, 102, 241, 0.4);
+  --bg-base: #090D16;
+  --bg-card: rgba(16, 22, 34, 0.72);
+  --bg-glass: rgba(16, 22, 34, 0.65);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 255, 255, 0.2);
 
-  --color-primary: #EC4899;
-  --color-secondary: #8B5CF6;
-  --color-accent: #3B82F6;
-  
+  --accent-primary: #FF6B8B;
+  --accent-secondary: #8B5CF6;
+  --accent-cyan: #06B6D4;
+
   --rarity-common: #10B981;
-  --rarity-rare: #6366F1;
+  --rarity-rare: #8B5CF6;
   --rarity-legendary: #F59E0B;
 
-  --text-main: #F8FAFC;
+  --text-main: #FFFFFF;
   --text-muted: #94A3B8;
   --text-dim: #64748B;
 
   --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
-  --nav-height: 72px;
-  --hud-height: 64px;
+  --radius-pill: 999px;
+  --radius-card: 20px;
 }
 
 * {
@@ -36,7 +35,7 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--bg-dark);
+  background-color: var(--bg-base);
   color: var(--text-main);
   overflow: hidden;
   position: fixed;
@@ -54,31 +53,23 @@ body {
   flex-direction: column;
 }
 
-/* Glassmorphism Generic Utility */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #EC4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Utilidad Glassmorphism Minimalista */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-subtle);
 }
 
 /* ==========================================================
-   HUD Superior
+   Header Minimalista Flotante
    ========================================================== */
-.app-hud {
+.app-header {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(var(--hud-height) + env(safe-area-inset-top, 0px));
-  padding: env(safe-area-inset-top, 8px) 16px 8px 16px;
+  top: env(safe-area-inset-top, 12px);
+  left: 16px;
+  right: 16px;
+  height: 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -86,93 +77,95 @@ body {
   pointer-events: none;
 }
 
-.hud-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(11, 15, 25, 0.82);
-  backdrop-filter: blur(12px);
-  padding: 6px 14px 6px 8px;
-  border-radius: 30px;
-  border: 1px solid var(--border-glass);
-  pointer-events: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-
-.brand-logo-ring {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.brand-subtitle {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.radar-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: pulse-dot 1.5s infinite;
-}
-
-@keyframes pulse-dot {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.7; }
-}
-
-.hud-trainer-badge {
+.header-brand {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(11, 15, 25, 0.82);
-  backdrop-filter: blur(12px);
-  padding: 4px 6px 4px 12px;
-  border-radius: 30px;
-  border: 1px solid var(--border-glass);
+  background: rgba(9, 13, 22, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
   pointer-events: auto;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
-.trainer-lvl-pill {
-  font-size: 0.75rem;
+.brand-text {
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  color: #FFFFFF;
+}
+
+.brand-accent {
   font-weight: 700;
-  color: #F59E0B;
+  color: var(--accent-primary);
+  margin-left: 1px;
 }
 
-.hud-avatar {
-  width: 32px;
-  height: 32px;
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulse-status 2s infinite ease-in-out;
+}
+
+@keyframes pulse-status {
+  0%, 100% { opacity: 0.6; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.cat-counter-pill {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(9, 13, 22, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.user-avatar-wrap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+
+.user-avatar-wrap img {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #F59E0B;
+  border: 1.5px solid var(--border-subtle);
+}
+
+.user-lvl-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  background: #F59E0B;
+  color: #000000;
+  font-size: 0.6rem;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--bg-base);
 }
 
 /* ==========================================================
@@ -185,7 +178,6 @@ body {
   width: 100%;
   height: 100%;
   display: none;
-  overflow: hidden;
 }
 
 .view-screen.active {
@@ -194,190 +186,199 @@ body {
 }
 
 /* ==========================================================
-   Vista 1: Mapa Leaflet (Estilo Pokémon GO / Videojuego)
+   Vista 1: Mapa Leaflet Minimalista
    ========================================================== */
 #map {
   width: 100%;
   height: 100%;
-  background: #111827;
-}
-
-/* Efecto viñeta inmersiva de aventura */
-.map-vignette-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  box-shadow: inset 0 0 90px rgba(11, 15, 25, 0.4);
-  z-index: 500;
+  background: var(--bg-base);
 }
 
 /* Temas del Mapa */
-/* 1. Modo Aventura Pokémon GO (Cálido, Verde vibrante, agua azul zafiro) */
 .map-theme-adventure .leaflet-tile {
-  filter: contrast(1.08) saturate(1.45) brightness(1.02);
-  transition: filter 0.4s ease;
+  filter: contrast(1.05) saturate(1.35) brightness(1.02);
+  transition: filter 0.3s ease;
 }
 
-/* 2. Modo Cyber Neón (Oscuro con luminiscencia violeta/cian) */
 .map-theme-cyber .leaflet-tile {
-  filter: invert(100%) hue-rotate(180deg) brightness(0.9) contrast(1.25) saturate(1.5);
-  transition: filter 0.4s ease;
+  filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(1.2) saturate(1.4);
+  transition: filter 0.3s ease;
 }
 
-/* 3. Modo Satélite HD */
 .map-theme-satellite .leaflet-tile {
-  filter: contrast(1.1) saturate(1.25);
-  transition: filter 0.4s ease;
+  filter: contrast(1.08) saturate(1.2);
+  transition: filter 0.3s ease;
 }
 
 .leaflet-control-attribution {
   display: none !important;
 }
 
-.map-overlay-top {
-  position: absolute;
-  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 8px);
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 900;
-  pointer-events: none;
-}
-
-.radar-chip {
-  padding: 8px 18px;
-  border-radius: 24px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  pointer-events: auto;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
-}
-
-.pulse-ring {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  box-shadow: 0 0 12px var(--color-primary);
-  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.8); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(236, 72, 153, 0); }
-  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
-}
-
+/* Controles Flotantes del Mapa */
 .map-controls {
   position: absolute;
   right: 16px;
-  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 60px);
+  top: calc(env(safe-area-inset-top, 12px) + 60px);
   z-index: 900;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-end;
 }
 
-.glass-btn {
-  background: rgba(18, 24, 38, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1.5px solid var(--border-glass);
-  color: var(--text-main);
+.control-btn {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+  background: rgba(9, 13, 22, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
 }
 
-.glass-btn:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+.control-btn:active {
+  transform: scale(0.92);
+  border-color: var(--border-active);
 }
 
-.glass-btn:active {
-  transform: scale(0.9);
-  background: rgba(99, 102, 241, 0.4);
-}
-
-.btn-round {
-  width: 48px;
-  height: 48px;
-}
-
-/* Menú desplegable de selección de tema */
+/* Menú de Temas de Mapa */
 .theme-dropdown {
   position: absolute;
-  top: 60px;
+  top: 50px;
   right: 0;
-  width: 170px;
-  border-radius: 18px;
-  padding: 8px;
+  width: 150px;
+  border-radius: 14px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--border-glass);
+  gap: 2px;
   z-index: 1000;
-  animation: slide-in 0.2s ease-out;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-@keyframes slide-in {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+.theme-dropdown.hidden {
+  display: none !important;
 }
 
 .theme-option {
   background: none;
   border: none;
-  color: var(--text-main);
+  color: var(--text-muted);
   font-family: var(--font-family);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 8px 12px;
-  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  text-align: left;
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
-.theme-option:hover {
+.theme-option.active, .theme-option:hover {
   background: rgba(255, 255, 255, 0.08);
-}
-
-.theme-option.active {
-  background: rgba(236, 72, 153, 0.25);
   color: #FFFFFF;
 }
 
-.theme-dot {
-  width: 10px;
-  height: 10px;
+.dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  flex-shrink: 0;
 }
-
-.dot-adventure { background: #10B981; box-shadow: 0 0 6px #10B981; }
-.dot-cyber { background: #6366F1; box-shadow: 0 0 6px #6366F1; }
-.dot-satellite { background: #F59E0B; box-shadow: 0 0 6px #F59E0B; }
+.dot-adventure { background: #10B981; }
+.dot-cyber { background: #8B5CF6; }
+.dot-satellite { background: #F59E0B; }
 
 /* ==========================================================
-   Marcadores Vivos de Michis en el Mapa (Estilo Criaturas)
+   Botón Shutter Minimalista: Cámara con Orejitas
+   ========================================================== */
+.capture-trigger-wrapper {
+  position: absolute;
+  bottom: calc(72px + env(safe-area-inset-bottom, 12px) + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 950;
+}
+
+.hidden-input {
+  display: none !important;
+}
+
+.minimal-cat-camera {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.minimal-cat-camera:active {
+  transform: scale(0.92);
+}
+
+/* Orejitas Geométricas Limpias */
+.cat-ears-silhouette {
+  position: absolute;
+  top: -7px;
+  width: 58px;
+  height: 14px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.ear-shape {
+  width: 14px;
+  height: 14px;
+  background: #111827;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-bottom: none;
+}
+
+.ear-shape.left {
+  border-top-left-radius: 8px;
+  transform: rotate(-12deg);
+}
+
+.ear-shape.right {
+  border-top-right-radius: 8px;
+  transform: rotate(12deg);
+}
+
+/* Núcleo de la Cámara Shutter */
+.camera-lens-core {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #182234 0%, #0B0F19 100%);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 107, 139, 0.25);
+  z-index: 2;
+  transition: border-color 0.2s;
+}
+
+.minimal-cat-camera:hover .camera-lens-core {
+  border-color: var(--accent-primary);
+}
+
+/* ==========================================================
+   Pines de Criaturas Minimalistas en el Mapa
    ========================================================== */
 .creature-marker-wrapper {
   background: none;
@@ -386,65 +387,49 @@ body {
 
 .creature-pin {
   position: relative;
-  width: 58px;
-  height: 68px;
+  width: 48px;
+  height: 58px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  animation: creature-bounce 3s infinite ease-in-out;
-  transform-origin: bottom center;
+  animation: float-pin 3s infinite ease-in-out;
 }
 
-@keyframes creature-bounce {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.04); }
+@keyframes float-pin {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
-.creature-pin:active {
-  transform: scale(0.9);
-}
-
-/* Orejitas de gato del pin */
 .creature-pin-ears {
-  width: 38px;
-  height: 12px;
+  width: 32px;
+  height: 8px;
   display: flex;
   justify-content: space-between;
   position: absolute;
-  top: -4px;
-  z-index: 10;
+  top: -3px;
+  z-index: 2;
 }
 
 .creature-ear {
-  width: 12px;
-  height: 12px;
-  border: 2px solid #FFFFFF;
+  width: 9px;
+  height: 9px;
+  background: #111827;
+  border: 1.5px solid currentColor;
   border-bottom: none;
-  background: #EC4899;
 }
+.creature-ear.ear-l { border-top-left-radius: 6px; transform: rotate(-12deg); }
+.creature-ear.ear-r { border-top-right-radius: 6px; transform: rotate(12deg); }
 
-.creature-ear.ear-l {
-  border-top-left-radius: 8px 10px;
-  transform: rotate(-14deg);
-}
-
-.creature-ear.ear-r {
-  border-top-right-radius: 8px 10px;
-  transform: rotate(14deg);
-}
-
-/* Avatar circular del michi con aura */
 .creature-avatar-box {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  position: relative;
   overflow: hidden;
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  z-index: 5;
-  background: #1E293B;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  z-index: 3;
+  background: #111827;
 }
 
 .creature-avatar-box img {
@@ -453,479 +438,296 @@ body {
   object-fit: cover;
 }
 
-/* Aura de rareza */
+/* Auras de rareza limpias */
 .rarity-aura-comun {
-  border-color: #10B981 !important;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.7), 0 8px 20px rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--rarity-common) !important;
+  color: var(--rarity-common);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6) !important;
 }
 
 .rarity-aura-raro {
-  border-color: #8B5CF6 !important;
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 8px 20px rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--rarity-rare) !important;
+  color: var(--rarity-rare);
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.6) !important;
 }
 
 .rarity-aura-legendario {
-  border-color: #F59E0B !important;
-  box-shadow: 0 0 24px rgba(245, 158, 11, 0.95), 0 0 10px #F59E0B, 0 8px 20px rgba(0, 0, 0, 0.5) !important;
-  animation: legendary-glow 2s infinite alternate ease-in-out;
+  border-color: var(--rarity-legendary) !important;
+  color: var(--rarity-legendary);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.8) !important;
 }
 
-@keyframes legendary-glow {
-  0% { filter: drop-shadow(0 0 6px #F59E0B); }
-  100% { filter: drop-shadow(0 0 18px #FDE047); }
-}
-
-/* Flechita / puntero inferior del pin */
 .creature-pin-tail {
-  width: 12px;
-  height: 10px;
-  background: #FFFFFF;
+  width: 8px;
+  height: 6px;
+  background: currentColor;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
-  margin-top: -3px;
-  z-index: 4;
+  margin-top: -2px;
+  z-index: 1;
 }
 
-/* Etiqueta con el nombre flotante */
 .creature-name-pill {
   position: absolute;
-  bottom: -14px;
-  background: rgba(11, 15, 25, 0.9);
+  bottom: -10px;
+  background: rgba(9, 13, 22, 0.85);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-subtle);
   color: #FFFFFF;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 7px;
-  border-radius: 8px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 6px;
   white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  max-width: 90px;
+  max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Radar Sonar del Entrenador */
+/* Radar del Usuario */
 .user-gps-container {
   background: none;
   border: none;
 }
 
 .user-gps-marker {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #06B6D4;
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 0 20px #06B6D4, 0 0 10px #3B82F6;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 14px #06B6D4;
   position: relative;
 }
 
 .user-gps-radar-wave {
   position: absolute;
-  top: -24px;
-  left: -24px;
-  width: 64px;
-  height: 64px;
+  top: -18px;
+  left: -18px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 2px solid rgba(6, 182, 212, 0.65);
-  animation: user-wave 2.4s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
+  border: 1.5px solid rgba(6, 182, 212, 0.6);
+  animation: radar-expand 2.5s infinite ease-out;
 }
 
 .user-gps-radar-wave:nth-child(2) {
-  animation-delay: 1.2s;
+  animation-delay: 1.25s;
 }
 
-@keyframes user-wave {
-  0% { transform: scale(0.4); opacity: 1; border-color: rgba(6, 182, 212, 0.8); }
-  100% { transform: scale(2.8); opacity: 0; border-color: rgba(236, 72, 153, 0); }
+@keyframes radar-expand {
+  0% { transform: scale(0.3); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
 }
 
 /* ==========================================================
-   Botón de Captura Central: Cámara con Orejitas de Gato
+   Barra de Navegación Flotante (Floating Dock)
    ========================================================== */
-.catch-action-container {
+.floating-dock {
   position: absolute;
-  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+  bottom: calc(env(safe-area-inset-bottom, 12px) + 10px);
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 950;
-}
-
-.hidden-input {
-  display: none !important;
-}
-
-.cat-camera-btn {
-  width: 90px;
-  height: 82px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: float-camera 3s infinite ease-in-out;
-  filter: drop-shadow(0 8px 24px rgba(236, 72, 153, 0.55));
-}
-
-@keyframes float-camera {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-6px) scale(1.03); }
-}
-
-.cat-camera-btn:active {
-  transform: scale(0.92);
-}
-
-/* Orejitas de Gato */
-.cat-ears-wrap {
-  width: 82px;
-  height: 22px;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 6px;
-  z-index: 1;
-}
-
-.cat-ear {
-  width: 24px;
-  height: 22px;
-  background: linear-gradient(135deg, #FF6B8B 0%, #EC4899 100%);
-  border: 2.5px solid #FFFFFF;
-  border-bottom: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.ear-left {
-  border-top-left-radius: 18px 22px;
-  border-top-right-radius: 6px 14px;
-  transform: rotate(-10deg);
-}
-
-.ear-right {
-  border-top-right-radius: 18px 22px;
-  border-top-left-radius: 6px 14px;
-  transform: rotate(10deg);
-}
-
-.ear-inner {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 14px;
-  background: #FFD1DC;
-  border-radius: 8px 8px 0 0;
-}
-
-/* Chasis de la Cámara */
-.camera-chassis {
-  width: 86px;
-  height: 60px;
-  background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
-  border: 2.5px solid #FFFFFF;
-  border-radius: 20px;
-  position: relative;
+  height: 56px;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.25), 0 4px 15px rgba(0, 0, 0, 0.6);
-  z-index: 2;
-  margin-top: -3px;
-}
-
-/* Botón disparador */
-.camera-shutter {
-  position: absolute;
-  top: -6px;
-  left: 14px;
-  width: 14px;
-  height: 6px;
-  background: #F43F5E;
-  border: 1.5px solid #FFFFFF;
-  border-radius: 4px 4px 0 0;
-}
-
-/* Flash de la cámara */
-.camera-flash-light {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  width: 11px;
-  height: 11px;
-  background: #FDE047;
-  border: 1.5px solid #FFFFFF;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #FDE047;
-  animation: flash-pulse 2s infinite ease-in-out;
-}
-
-@keyframes flash-pulse {
-  0%, 100% { opacity: 0.8; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 14px #FDE047; }
-}
-
-/* Lente Central */
-.camera-lens-housing {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
-  border: 2px solid #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
-}
-
-.camera-lens-glass {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #1E293B 20%, #060913 90%);
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lens-reflection {
-  position: absolute;
-  top: 4px;
-  left: 5px;
-  width: 9px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  transform: rotate(-30deg);
-}
-
-.lens-aperture {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lens-paw {
-  font-size: 14px;
-  filter: drop-shadow(0 0 4px #EC4899);
-}
-
-/* Bigotes decorativos en la cámara */
-.camera-whiskers {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
   gap: 4px;
+  z-index: 1000;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
-.camera-whiskers span {
-  width: 10px;
-  height: 1.5px;
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 1px;
+.dock-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
 }
 
-.whiskers-left {
-  left: 5px;
-}
-.whiskers-left span:first-child { transform: rotate(8deg); }
-.whiskers-left span:last-child { transform: rotate(-8deg); }
-
-.whiskers-right {
-  right: 5px;
-}
-.whiskers-right span:first-child { transform: rotate(-8deg); }
-.whiskers-right span:last-child { transform: rotate(8deg); }
-
-.catch-label {
-  margin-top: 6px;
-  font-size: 0.74rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.dock-btn.active {
   color: #FFFFFF;
-  background: rgba(11, 15, 25, 0.85);
-  backdrop-filter: blur(8px);
-  padding: 3px 12px;
-  border-radius: 14px;
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dock-btn:active {
+  transform: scale(0.96);
 }
 
 /* ==========================================================
-   Vista 2: Perfil y Michidex
+   Vista 2: Perfil & Michidex Minimalista
    ========================================================== */
-.profile-scroll-area {
+.profile-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 12px) 16px calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 30px) 16px;
+  padding: calc(60px + env(safe-area-inset-top, 12px)) 20px calc(80px + env(safe-area-inset-bottom, 12px)) 20px;
   -webkit-overflow-scrolling: touch;
 }
 
-.trainer-card {
-  border-radius: 24px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.trainer-header {
+.profile-hero {
   display: flex;
   gap: 16px;
   align-items: center;
+  margin-bottom: 24px;
 }
 
-.trainer-avatar-wrapper {
-  position: relative;
-  width: 72px;
-  height: 72px;
+.hero-avatar-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
-.profile-avatar-img {
+.hero-avatar-box img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--color-primary);
-  box-shadow: 0 0 16px rgba(236, 72, 153, 0.4);
 }
 
-.trainer-level-tag {
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  background: #F59E0B;
-  color: #000;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 10px;
-  border: 2px solid var(--bg-dark);
-}
-
-.trainer-info h2 {
-  font-size: 1.25rem;
-  font-weight: 800;
-}
-
-.trainer-handle {
-  font-size: 0.8rem;
-  color: var(--color-secondary);
+.hero-text h2 {
+  font-size: 1.2rem;
   font-weight: 600;
-  display: block;
+  letter-spacing: -0.3px;
 }
 
-.trainer-bio {
+.hero-subline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.75rem;
   color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.dot-separator {
+  color: var(--border-subtle);
+}
+
+.level-pill {
+  color: #F59E0B;
+  font-weight: 600;
+}
+
+.hero-bio {
+  font-size: 0.75rem;
+  color: var(--text-dim);
   margin-top: 4px;
   line-height: 1.3;
 }
 
-.xp-bar-container {
-  margin-top: 18px;
+/* Barra XP */
+.xp-strip {
+  margin-bottom: 24px;
 }
 
-.xp-labels {
+.xp-header {
   display: flex;
   justify-content: space-between;
   font-size: 0.72rem;
-  font-weight: 600;
   color: var(--text-muted);
   margin-bottom: 6px;
 }
 
-.xp-track {
+.xp-bar {
   width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
-.xp-progress {
+.xp-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #EC4899, #8B5CF6);
-  border-radius: 6px;
-  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: var(--radius-pill);
+  transition: width 0.4s ease;
 }
 
-.michidex-counters-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-top: 18px;
+/* Fila de Estadísticas Numéricas Limpias */
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 14px 8px;
+  margin-bottom: 28px;
 }
 
-.counter-box {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glass);
-  border-radius: 14px;
-  padding: 10px 4px;
-  text-align: center;
+.stat-col {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
 }
 
-.counter-val {
-  font-size: 1.15rem;
-  font-weight: 800;
+.stat-num {
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
-.counter-lbl {
+.stat-label {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.rarity-common .counter-val { color: var(--rarity-common); }
-.rarity-rare .counter-val { color: var(--rarity-rare); }
-.rarity-legendary .counter-val { color: var(--rarity-legendary); }
+.color-common { color: var(--rarity-common); }
+.color-rare { color: var(--rarity-rare); }
+.color-legendary { color: var(--rarity-legendary); }
 
-/* ==========================================================
-   Secciones e Insignias
-   ========================================================== */
-.section-container {
-  margin-bottom: 24px;
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-subtle);
 }
 
-.section-title-row {
+/* Bloques de Contenido */
+.content-block {
+  margin-bottom: 28px;
+}
+
+.block-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.section-title {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+.block-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 
-.badge-count {
-  font-size: 0.75rem;
+.block-counter {
+  font-size: 0.72rem;
   color: var(--text-muted);
 }
 
-.badges-grid {
+/* Insignias */
+.badges-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
 .badge-item {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
   border-radius: 16px;
   padding: 12px 6px;
   display: flex;
@@ -933,66 +735,61 @@ body {
   align-items: center;
   text-align: center;
   gap: 6px;
-  transition: transform 0.2s;
 }
 
 .badge-item.locked {
-  opacity: 0.35;
+  opacity: 0.25;
   filter: grayscale(1);
 }
 
 .badge-icon-box {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 .badge-name {
-  font-size: 0.68rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* ==========================================================
-   Michidex Cat Grid
-   ========================================================== */
-.filter-pills {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-}
-
-.filter-pill {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-glass);
+  font-size: 0.65rem;
   color: var(--text-muted);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* Filtros y Galería Michidex */
+.filter-group {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font-family);
   font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 16px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
 }
 
-.filter-pill.active {
-  background: var(--color-primary);
+.filter-btn.active {
   color: #FFFFFF;
-  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.michidex-grid {
+.michidex-masonry {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
 .michi-dex-card {
-  background: rgba(25, 33, 50, 0.75);
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--border-glass);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.15s;
 }
 
 .michi-dex-card:active {
@@ -1001,7 +798,7 @@ body {
 
 .michi-card-img-wrap {
   width: 100%;
-  height: 120px;
+  height: 125px;
   position: relative;
 }
 
@@ -1013,103 +810,41 @@ body {
 
 .michi-card-rarity {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 0.6rem;
-  font-weight: 800;
+  top: 6px;
+  right: 6px;
+  font-size: 0.58rem;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
   color: #FFFFFF;
 }
 
 .michi-card-content {
-  padding: 10px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .michi-card-name {
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.82rem;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .michi-card-pattern {
-  font-size: 0.68rem;
-  color: var(--text-muted);
+  font-size: 0.65rem;
+  color: var(--text-dim);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /* ==========================================================
-   Barra de Navegación Inferior (TabBar)
-   ========================================================== */
-.bottom-nav {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 1000;
-  border-top: 1px solid var(--border-glass);
-  border-bottom: none;
-  border-left: none;
-  border-right: none;
-  border-radius: 24px 24px 0 0;
-}
-
-.nav-btn {
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 18px;
-  transition: color 0.2s;
-}
-
-.nav-btn.active {
-  color: var(--color-primary);
-}
-
-.nav-btn-camera-trigger {
-  background: none;
-  border: none;
-  position: relative;
-  top: -14px;
-  cursor: pointer;
-}
-
-.nav-camera-glow {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #EC4899, #8B5CF6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #fff;
-  box-shadow: 0 4px 18px rgba(236, 72, 153, 0.6);
-  border: 3px solid var(--bg-dark);
-}
-
-/* ==========================================================
-   Modales & Overlays
+   Modales Minimalistas
    ========================================================== */
 .modal-overlay {
   position: absolute;
@@ -1117,8 +852,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(11, 15, 25, 0.88);
-  backdrop-filter: blur(12px);
+  background: rgba(9, 13, 22, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -1130,312 +866,199 @@ body {
   display: none !important;
 }
 
-/* Escaneo Gemini */
-.scan-card {
+.minimal-modal-card {
   width: 100%;
   max-width: 320px;
-  border-radius: 28px;
+  border-radius: var(--radius-card);
   padding: 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
 }
 
-.scan-image-preview-wrapper {
-  width: 220px;
-  height: 220px;
-  border-radius: 20px;
+/* Escaneo */
+.scan-visual {
+  width: 100%;
+  height: 200px;
+  border-radius: 14px;
   overflow: hidden;
   position: relative;
-  border: 2px solid var(--color-primary);
   margin-bottom: 16px;
 }
 
-.scan-image-preview-wrapper img {
+.scan-visual img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.scanner-laser {
+.scan-beam {
   position: absolute;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #06B6D4, #EC4899, transparent);
-  box-shadow: 0 0 15px #06B6D4;
-  animation: scan-move 2s infinite ease-in-out;
+  height: 2px;
+  background: #06B6D4;
+  box-shadow: 0 0 10px #06B6D4;
+  animation: scan-vertical 2s infinite ease-in-out;
 }
 
-@keyframes scan-move {
+@keyframes scan-vertical {
   0% { top: 0%; }
   50% { top: 100%; }
   100% { top: 0%; }
 }
 
-.gemini-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
+.ai-pill {
+  font-size: 0.65rem;
+  font-weight: 600;
   color: #38BDF8;
   background: rgba(56, 189, 248, 0.1);
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
 }
 
-.scan-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 4px;
+.scan-headline {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 6px;
 }
 
-.scan-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-bottom: 16px;
+.scan-subtext {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 2px;
 }
 
-.loading-bar {
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.loading-progress {
-  height: 100%;
-  background: linear-gradient(90deg, #EC4899, #38BDF8);
-  border-radius: 4px;
-  animation: progress-indet 1.8s infinite ease-in-out;
-}
-
-@keyframes progress-indet {
-  0% { width: 0%; transform: translateX(-100%); }
-  50% { width: 70%; transform: translateX(20%); }
-  100% { width: 100%; transform: translateX(100%); }
-}
-
-/* Modal de Celebración */
-.celebration-card {
-  width: 100%;
-  max-width: 360px;
-  border-radius: 28px;
-  padding: 24px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.animate-pop {
-  animation: pop-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes pop-in {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.modal-close-btn {
+/* Ficha de Celebración */
+.close-x {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.1);
+  top: 12px;
+  right: 12px;
+  background: none;
   border: none;
-  color: var(--text-main);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 1.2rem;
+  color: var(--text-muted);
+  font-size: 1.4rem;
   cursor: pointer;
+  line-height: 1;
 }
 
-.celebration-header {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.rarity-badge {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 20px;
-  color: #000;
-  background: #F59E0B;
-}
-
-.xp-gained-pill {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  color: #10B981;
-  background: rgba(16, 185, 129, 0.15);
-}
-
-.celebration-img-wrapper {
-  width: 180px;
-  height: 180px;
-  border-radius: 22px;
+.michi-photo-frame {
+  width: 100%;
+  height: 190px;
+  border-radius: 14px;
   overflow: hidden;
-  border: 3px solid var(--border-glass);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  margin-bottom: 16px;
+  position: relative;
+  margin-bottom: 14px;
 }
 
-.celebration-img-wrapper img {
+.michi-photo-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.michi-modal-title {
-  font-size: 1.35rem;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-
-.michi-pattern-pill {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.michi-personality-box {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glass);
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-size: 0.8rem;
-  font-style: italic;
-  color: #E2E8F0;
-  line-height: 1.4;
-  margin-bottom: 12px;
-}
-
-.michi-power-box {
-  font-size: 0.78rem;
-  margin-bottom: 20px;
-}
-
-.power-label {
-  color: #F59E0B;
-  font-weight: 700;
-}
-
-.power-value {
-  color: var(--text-main);
-  font-weight: 500;
-}
-
-.btn-primary {
-  width: 100%;
-  background: linear-gradient(135deg, #EC4899, #8B5CF6);
-  border: none;
-  color: #FFFFFF;
-  font-family: var(--font-family);
-  font-size: 0.95rem;
-  font-weight: 700;
-  padding: 14px;
-  border-radius: 16px;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
-}
-
-.btn-primary:active {
-  transform: scale(0.97);
-}
-
-/* Banner de Instalación */
-.install-banner {
+.rarity-tag {
   position: absolute;
-  top: calc(var(--hud-height) + env(safe-area-inset-top, 0px) + 8px);
-  left: 16px;
-  right: 16px;
-  padding: 12px 16px;
-  border-radius: 16px;
+  top: 8px;
+  right: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: #000000;
+  background: #F59E0B;
+}
+
+.details-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1500;
 }
 
-.install-text {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.78rem;
+.details-top h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
-.btn-dismiss {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #FFF;
-  padding: 6px 12px;
-  border-radius: 10px;
+.xp-badge {
   font-size: 0.72rem;
   font-weight: 600;
-  cursor: pointer;
+  color: #10B981;
 }
 
-/* ==========================================================
-   Leaflet Custom Markers
-   ========================================================== */
-.custom-cat-pin {
+.coat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.personality-quote {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 14px;
+  border-left: 2px solid var(--accent-primary);
+  padding-left: 8px;
+}
+
+.ability-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.ability-title {
+  color: var(--text-dim);
+}
+
+.ability-value {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.btn-action {
+  width: 100%;
+  background: #FFFFFF;
+  color: #090D16;
+  border: none;
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.btn-action:active {
+  transform: scale(0.97);
+  background: #E2E8F0;
+}
+
+/* Banner PWA */
+.minimal-install-bar {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 12px) + 54px);
+  left: 16px;
+  right: 16px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  z-index: 1100;
+}
+
+.btn-text {
   background: none;
   border: none;
-}
-
-.pin-container {
-  position: relative;
-  width: 44px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pin-img {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-  animation: bounce-pin 2.5s infinite ease-in-out;
-}
-
-@keyframes bounce-pin {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-.user-gps-marker {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #3B82F6;
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 0 16px #3B82F6;
-  position: relative;
-}
-
-.user-gps-radar-wave {
-  position: absolute;
-  top: -12px;
-  left: -12px;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 2px solid rgba(59, 130, 246, 0.6);
-  animation: user-wave 2s infinite ease-out;
-}
-
-@keyframes user-wave {
-  0% { transform: scale(0.6); opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; }
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
 }

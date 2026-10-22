@@ -17,7 +17,7 @@ const MichiDex = (() => {
   const badgesUnlockedCount = document.getElementById('badges-unlocked-count');
 
   const michidexContainer = document.getElementById('michidex-container');
-  const filterPills = document.querySelectorAll('.filter-pill');
+  const filterPills = document.querySelectorAll('.filter-btn, .filter-pill');
 
   let activeFilter = 'ALL';
   let cachedCatches = [];
